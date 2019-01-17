@@ -1,146 +1,142 @@
-
-
 window.onload = function () {
+  
+      var els = document.getElementsByTagName("IMG");
+        for (var i = 0, all = els.length; i < all; i++) {
+          els[i].classList.add("picla");
+        }
 
-                var els = document.getElementsByTagName("IMG");
-                    for(var i = 0, all = els.length; i < all; i++){   
-                         els[i].classList.add('picla');
-                     }
+        /*
+            Following adapted from:
+            picla v0.8.3
+            Copyright (c) 2016 Arun Michael Dsouza (amdsouza92@gmail.com)
+            Licence: MIT
+            Demo on CodePen - http://codepen.io/amdsouza92/full/aZOPVZ/
+        */
 
+        (function() {
+          "use strict";
 
-                /*
-                    Following adapted from:
-                    picla v0.8.3
-                    Copyright (c) 2016 Arun Michael Dsouza (amdsouza92@gmail.com)
-                    Licence: MIT
-                    Demo on CodePen - http://codepen.io/amdsouza92/full/aZOPVZ/
-                */
+          // Constructor function to create image element
+          function ImageElement(elem, altText) {
+            this.elem = elem; // Current image element
+            this.altText = altText; // Element's alt text
+          }
 
-                (function () {
+          // Function to get class string of current image
+          ImageElement.prototype.getClassString = function() {
+            // Get array of classes applied to current element
+            var classList = $(this.elem)
+              .attr("class")
+              .split(/\s+/);
 
-                    "use strict";
+            // Remove class 'picla' from the array
+            classList = jQuery.grep(classList, function(value) {
+              return value != "picla";
+            });
 
-                    // Constructor function to create image element 
-                    function ImageElement(elem, altText) {
-                        this.elem = elem; // Current image element
-                        this.altText = altText; // Element's alt text
-                    }
+            // Generate class string for current image
+            var classString = "";
+            for (var i = 0; i < classList.length; i++) {
+              classString += " " + classList[i];
+            }
 
-                    // Function to get class string of current image
-                    ImageElement.prototype.getClassString = function () {
+            return classString;
+          };
 
-                        // Get array of classes applied to current element
-                        var classList = $(this.elem).attr('class').split(/\s+/);
+          // Function to get source of current image
+          ImageElement.prototype.getSrc = function() {
+            return this.elem.src;
+          };
 
-                        // Remove class 'picla' from the array
-                        classList = jQuery.grep(classList, function (value) {
-                            return value != 'picla';
-                        });
+          // Function to get parent element of current image
+          ImageElement.prototype.getParent = function() {
+            return this.elem.parentElement;
+          };
 
-                        // Generate class string for current image
-                        var classString = '';
-                        for (var i = 0; i < classList.length; i++) {
-                            classString += ' ' + classList[i];
-                        }
+          // Get all image elements with class of 'picla'
+          var elements = $("img.picla");
 
-                        return classString;
-                    };
+          // Function to generate image labels for all image elements
+          function generateImageLabel(imgElement) {
+            // Fire interval to check computed width of image
+            var interval = setInterval(function() {
+              // If its calculated then clear inteval and run process
+              if (window.getComputedStyle(imgElement.elem).width !== "0px") {
+                clearInterval(interval);
 
-                    // Function to get source of current image
-                    ImageElement.prototype.getSrc = function () {
-                        return this.elem.src;
-                    };
+                // Get computed width of image element
+                var width = window.getComputedStyle(imgElement.elem).width;
 
-                    // Function to get parent element of current image
-                    ImageElement.prototype.getParent = function () {
-                        return this.elem.parentElement;
-                    };
+                // Get parent element of image element
+                var parent = imgElement.getParent();
 
-                    // Get all image elements with class of 'picla'
-                    var elements = $('img.picla');
+                // Create wrapper for image element to be rendered
+                var wrapper = document.createElement("div");
 
-                    // Function to generate image labels for all image elements
-                    function generateImageLabel(imgElement) {
+                // Add default CSS to wrapper
+                $(wrapper).css({
+                  display: "inline-block",
+                  position: "relative",
+                  width: width,
+                  overflow: "hidden",
+                  margin: getComputedStyle(imgElement.elem).margin,
+                  padding: getComputedStyle(imgElement.elem).padding
+                });
 
-                        // Fire interval to check computed width of image
-                        var interval = setInterval(function () {
+                // Add image element classes to the wrapper
+                $(wrapper).addClass(imgElement.getClassString());
 
-                            // If its calculated then clear inteval and run process
-                            if (window.getComputedStyle(imgElement.elem).width !== '0px') {
-                                clearInterval(interval);
+                // Create label element
+                var label = document.createElement("div");
+                $(label).css({
+                  position: "absolute",
+                  bottom: 0,
+                  width: "100%",
+                  "box-sizing": "border-box"
+                });
+                $(label).html(imgElement.altText);
 
-                                // Get computed width of image element
-                                var width = window.getComputedStyle(imgElement.elem).width;
+                // Check for label class attribute
+                var labelClass = $(imgElement.elem).attr("data-label-class");
+                if (labelClass !== "") {
+                  $(label).addClass(labelClass);
+                }
 
-                                // Get parent element of image element 
-                                var parent = imgElement.getParent();
+                label.classList.add("labelstyle");
 
-                                // Create wrapper for image element to be rendered
-                                var wrapper = document.createElement('div');
+                // Create image element to be rendered
+                var img = document.createElement("img");
 
-                                // Add default CSS to wrapper
-                                $(wrapper).css({
-                                    'display': 'inline-block',
-                                    'position': 'relative',
-                                    'width': width,
-                                    'overflow': 'hidden',
-                                    'margin': getComputedStyle(imgElement.elem).margin,
-                                    'padding': getComputedStyle(imgElement.elem).padding
-                                });
+                // Initialise rendered image element
+                img.src = imgElement.getSrc();
+                $(img).css({
+                  width: "100%",
+                  margin: 0,
+                  padding: 0
+                });
 
-                                // Add image element classes to the wrapper
-                                $(wrapper).addClass(imgElement.getClassString());
+                // Append generated image and label to wrapper
+                wrapper.appendChild(img);
+                wrapper.appendChild(label);
 
-                                // Create label element
-                                var label = document.createElement('div');
-                                $(label).css({
-                                    'position': 'absolute',
-                                    'bottom': 0,
-                                    'width': '100%',
-                                    'box-sizing': 'border-box'
-                                })
-                                $(label).html(imgElement.altText);
+                // Replace original image element with wrapper
+                parent.replaceChild(wrapper, imgElement.elem);
+              }
+            }, 1);
+          }
 
-                                // Check for label class attribute
-                                var labelClass = $(imgElement.elem).attr('data-label-class');
-                                if (labelClass !== '') {
-                                    $(label).addClass(labelClass);
-                                }
+          // Loop through all those elements and convert to a wrapper with attached image label
+          for (var i = 0; i < elements.length; i++) {
+            // Create new image element
+            var imgElement = new ImageElement(
+              elements[i],
+              elements[i].getAttribute("aria-label")
+            );
 
-                              label.classList.add("labelstyle");
-                              
-                              
-                                // Create image element to be rendered
-                                var img = document.createElement('img');
+            // Genrate image labels for all elements
+            generateImageLabel(imgElement);
+          }
+        })();
 
-                                // Initialise rendered image element
-                                img.src = imgElement.getSrc();
-                                $(img).css({
-                                    'width': '100%',
-                                    'margin': 0,
-                                    'padding': 0
-                                });
-
-                                // Append generated image and label to wrapper
-                                wrapper.appendChild(img);
-                                wrapper.appendChild(label);
-
-                                // Replace original image element with wrapper
-                                parent.replaceChild(wrapper, imgElement.elem);
-                            }
-                        }, 1);
-                    };
-
-                    // Loop through all those elements and convert to a wrapper with attached image label
-                    for (var i = 0; i < elements.length; i++) {
-
-                        // Create new image element
-                        var imgElement = new ImageElement(elements[i], elements[i].getAttribute('aria-label'));
-
-                        // Genrate image labels for all elements
-                        generateImageLabel(imgElement);
-                    }
-                })();
-
-};
+ };
 

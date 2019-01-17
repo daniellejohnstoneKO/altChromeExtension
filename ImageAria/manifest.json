@@ -9,10 +9,14 @@
   "browser_action": {
   	"default_title": "See alt text"
   },
-  "background": {
-    "scripts": ["myscript.js", "jquery-3.3.1.js"]
-  },
+  
   "permissions": [
   "http://*/*/", "https://*/*/"
-  ]
+  ],
+
+  "content_scripts": [{
+    "css": ["styles.css"],
+    "js": ["myscript.js", "jquery-3.3.1.js"],
+    "matches": ["<all_urls>"]
+  }]
 }
