@@ -1,5 +1,13 @@
+// window.addEventListener('load', function(){
+//   // Everything has loaded!
+// });
+
+// $("<img/>").load(function () {
+
 window.onload = function () {
   
+
+
       var els = document.getElementsByTagName("IMG");
         for (var i = 0, all = els.length; i < all; i++) {
           els[i].classList.add("picla");
@@ -139,4 +147,4 @@ window.onload = function () {
         })();
 
  };
-
+ // });
