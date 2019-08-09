@@ -138,7 +138,7 @@ window.onload = function () {
             // Create new image element
             var imgElement = new ImageElement(
               elements[i],
-              elements[i].getAttribute("aria-label")
+              elements[i].getAttribute("alt")
             );
 
             // Genrate image labels for all elements

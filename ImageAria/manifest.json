@@ -1,7 +1,7 @@
 {
-  "name": "Image Aria",
+  "name": "Image Alt",
   "version": "1.0",
-  "description": "displays aria label of an image",
+  "description": "displays alt text of an image",
   "manifest_version": 2,
   "icons": {
   	"128":"ariaicon.png"
